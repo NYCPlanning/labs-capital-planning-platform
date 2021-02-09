@@ -14,8 +14,29 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <div ref={el => this.mapContainer = el} className="mapContainer" />
+      <div className="as-app">
+        <header className="as-toolbar"></header>
+        <nav className="as-tabs"></nav>
+    
+        <div className="as-content">
+          <aside className="as-sidebar as-sidebar--left"></aside>
+    
+          <main className="as-main">
+            <div className="as-map-area">
+              <div ref={el => this.mapContainer = el} className="mapContainer" />
+    
+              <div className="as-map-panels">
+                <div className="as-panel as-panel--top as-panel--right">
+                  <div className="as-panel__element as-p--32 as-bg--warning"></div>
+                </div>
+              </div>
+    
+            </div>
+            <footer className="as-map-footer as-bg--complementary"></footer>
+          </main>
+    
+          <aside className="as-sidebar as-sidebar--right"></aside>
+        </div>
       </div>
     );
   }
