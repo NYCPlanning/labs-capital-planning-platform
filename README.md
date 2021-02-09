@@ -1,8 +1,20 @@
 # Capital Planning Platform
 
-## Available Scripts
+## Requirements
+- Node 12.* or greater
+- yarn 1.x or greater
 
-In the project directory, you can run:
+## Development set up
+1. Create a `.env` file at the root of the project. Paste the following:
+```
+  REACT_APP_MAPBOX_TOKEN=<insert_your_mapbox_token>
+```
+2.  Install packages and start the app
+```
+> yarn
+> yarn start
+```
+3. visit [http://localhost:3000](http://localhost:3000)
 
 ### `yarn start`
 
