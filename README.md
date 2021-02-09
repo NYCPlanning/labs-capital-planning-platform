@@ -1,10 +1,20 @@
-# Getting Started with Create React App
+# Capital Planning Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Requirements
+- Node 12.* or greater
+- yarn 1.x or greater
 
-## Available Scripts
-
-In the project directory, you can run:
+## Development set up
+1. Create a `.env` file at the root of the project. Paste the following:
+```
+  REACT_APP_MAPBOX_TOKEN=<insert_your_mapbox_token>
+```
+2.  Install packages and start the app
+```
+> yarn
+> yarn start
+```
+3. visit [http://localhost:3000](http://localhost:3000)
 
 ### `yarn start`
 
