@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { defineCustomElements } from '@carto/airship-components/dist/loader';
+import mapboxgl from 'mapbox-gl';
+
+mapboxgl.accessToken =  process.env.REACT_APP_MAPBOX_TOKEN;
 
 ReactDOM.render(
   <React.StrictMode>
