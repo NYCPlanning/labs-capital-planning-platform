@@ -1,17 +1,28 @@
 import React from 'react';
 import './App.css';
-import mapboxgl from 'mapbox-gl';
+import DeckGL from '@deck.gl/react';
+import {LineLayer} from '@deck.gl/layers';
+import {StaticMap} from 'react-map-gl';
 import CategoryWidget from './widgets/category';
 
+// Viewport settings
+const INITIAL_VIEW_STATE = {
+  longitude: -122.41669,
+  latitude: 37.7853,
+  zoom: 13,
+  pitch: 0,
+  bearing: 0
+};
+
+// Data to be used by the LineLayer
+const data = [
+  {sourcePosition: [-122.41669, 37.7853], targetPosition: [-122.41669, 37.781]}
+];
+
 class App extends React.Component {
-  componentDidMount() {
-    const map = new mapboxgl.Map({
-      container: this.mapContainer,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [5, 34],
-      zoom: 2
-    });
-  }
+  layers = [
+    new LineLayer({id: 'line-layer', data})
+  ];
 
   categories =  [
     { name: 'Bars & Restaurants', value: 1000 },
@@ -27,13 +38,13 @@ class App extends React.Component {
     return (
       <div className="as-app">
         <as-toolbar>
-          <div href="#" class="as-toolbar__item">
+          <div href="#" className="as-toolbar__item">
             Capital Planning Platform
           </div>
-          <nav class="as-toolbar__actions">
+          <nav className="as-toolbar__actions">
             <ul>
               <li>
-                <a href="#" class="as-toolbar__item">About the Data</a>
+                <a href="#" className="as-toolbar__item">About the Data</a>
               </li>
             </ul>
           </nav>
@@ -49,8 +60,16 @@ class App extends React.Component {
           </aside>
     
           <main className="as-main">
-            <div className="as-map-area">
-              <div ref={el => this.mapContainer = el} className="mapContainer" />
+            <div className="as-map-area mapContainer">
+              <DeckGL
+                initialViewState={INITIAL_VIEW_STATE}
+                controller={true}
+                layers={this.layers}
+              >
+                <StaticMap
+                  mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+                />
+              </DeckGL>
     
               <div className="as-map-panels">
                 <div className="as-panel as-panel--top as-panel--right">
@@ -59,7 +78,6 @@ class App extends React.Component {
               </div>
     
             </div>
-            <footer className="as-map-footer as-bg--complementary"></footer>
           </main>
     
           <aside className="as-sidebar as-sidebar--right"></aside>
