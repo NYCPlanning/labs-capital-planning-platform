@@ -8,6 +8,8 @@
 1. Create a `.env` file at the root of the project. Paste the following:
 ```
   REACT_APP_MAPBOX_TOKEN=<insert_your_mapbox_token>
+  REACT_APP_CARTO_USERNAME=<carto_username>
+  REACT_APP_CARTO_API_KEY=<carto_token>
 ```
 2.  Install packages and start the app
 ```
