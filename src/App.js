@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import mapboxgl from 'mapbox-gl';
+import CategoryWidget from './widgets/category';
 
 class App extends React.Component {
   componentDidMount() {
@@ -12,14 +13,40 @@ class App extends React.Component {
     });
   }
 
+  categories =  [
+    { name: 'Bars & Restaurants', value: 1000 },
+    { name: 'Fashion', value: 900 },
+    { name: 'Grocery', value: 800 },
+    { name: 'Health', value: 400 },
+    { name: 'Shopping mall', value: 250 },
+    { name: 'Transportation', value: 1000 },
+    { name: 'Leisure', value: 760 }
+  ];
+
   render() {
     return (
       <div className="as-app">
-        <header className="as-toolbar"></header>
-        <nav className="as-tabs"></nav>
-    
+        <as-toolbar>
+          <div href="#" class="as-toolbar__item">
+            Capital Planning Platform
+          </div>
+          <nav class="as-toolbar__actions">
+            <ul>
+              <li>
+                <a href="#" class="as-toolbar__item">About the Data</a>
+              </li>
+            </ul>
+          </nav>
+        </as-toolbar>
+        
         <div className="as-content">
-          <aside className="as-sidebar as-sidebar--left"></aside>
+          <aside className="as-sidebar as-sidebar--left">
+            <CategoryWidget
+              heading="Business Volume"
+              description="Description"
+              categories={this.categories}
+            />
+          </aside>
     
           <main className="as-main">
             <div className="as-map-area">
