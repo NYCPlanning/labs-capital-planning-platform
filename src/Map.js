@@ -26,17 +26,12 @@ export default class Map extends React.Component {
     });
   }
 
-  componentDidUpdate() {
-    this._regenerateLayers();
-  }
-
-  _regenerateLayers() {
-    this.layers = this.props.filters.facilityDomain.map(value => {
-
-      return new CartoSQLLayer({
-        id: value,
-        data: `SELECT * FROM facdb_v2019_12 WHERE facdomain='${value}'`,
-        pointRadiusMinPixels: 10,
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.filters.facilityDomain !== this.props.filters.facilityDomain) {
+      const layer = new CartoSQLLayer({
+        id: '12345',
+        data: `SELECT * FROM facdb_v2019_12 ${constructWhereClaus('facdomain', this.props.filters.facilityDomain)}`,
+        pointRadiusMinPixels: 7,
         getLineColor: [0, 0, 0, 0.75],
         lineWidthMinPixels: 3,
         getFillColor: colorCategories({
@@ -46,20 +41,35 @@ export default class Map extends React.Component {
             'PARKS, GARDENS, AND HISTORICAL SITES',
             'HEALTH AND HUMAN SERVICES',
           ],
-          colors: 'Bold'
-        })
+          colors: 'Bold',
+        }),
       });
-    });
+  
+      this.setState({
+        layers: [layer],
+      });
+    }
   }
 
-  layers = [
-    new  CartoSQLLayer({
-    data: `SELECT * FROM facdb_v2019_12`,
-    pointRadiusMinPixels: 2,
-    getLineColor: [0, 0, 0, 0.75],
-    getFillColor: [238, 77, 90],
-    lineWidthMinPixels: 1
-  })];
+  state = {
+    layers: [
+      new  CartoSQLLayer({
+        data: `SELECT * FROM facdb_v2019_12`,
+        pointRadiusMinPixels: 7,
+        getLineColor: [0, 0, 0, 0.75],
+        lineWidthMinPixels: 3,
+        getFillColor: colorCategories({
+          attr: 'facdomain',
+          domain: [
+            'LIBRARIES AND CULTURAL PROGRAMS',
+            'PARKS, GARDENS, AND HISTORICAL SITES',
+            'HEALTH AND HUMAN SERVICES',
+          ],
+          colors: 'Bold',
+        }),
+      }),
+    ],
+  }
 
   render() {
     return (
@@ -67,7 +77,7 @@ export default class Map extends React.Component {
         <DeckGL
           initialViewState={INITIAL_VIEW_STATE}
           controller={true}
-          layers={this.layers}
+          layers={this.state.layers}
         >
           <StaticMap
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
