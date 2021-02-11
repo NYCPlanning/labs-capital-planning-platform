@@ -11,9 +11,11 @@ class App extends React.Component {
     },
   }
 
-  onFilterSelection = ({ detail }) => {
+  onFilterSelection = (event) => {
+    let { detail } = event;
+
     this.setState({ filters: {
-        facilityDomain:  detail,
+        facilityDomain: detail,
       }
     });
   }

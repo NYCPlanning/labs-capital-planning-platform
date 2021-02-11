@@ -1,7 +1,7 @@
 import React from 'react';
 import DeckGL from '@deck.gl/react';
 import {StaticMap} from 'react-map-gl';
-import {CartoSQLLayer, setDefaultCredentials} from '@deck.gl/carto';
+import {CartoSQLLayer, setDefaultCredentials, colorCategories} from '@deck.gl/carto';
 
 const INITIAL_VIEW_STATE = {
   longitude: -73.986607,
@@ -12,12 +12,10 @@ const INITIAL_VIEW_STATE = {
 };
 
 function constructWhereClaus(property, facdomainValues) {
-  if (!facdomainValues.length) return '1=1';
-
   const facdomainConditions = facdomainValues.map(value => `${property}='${value}'`);
-  const finalClaus = facdomainConditions.join(' OR ');
+  const finalClaus = facdomainConditions.join(') OR (');
 
-  return finalClaus;
+  return (facdomainValues.length > 0) ? `WHERE (${finalClaus})` : '';
 }
 
 export default class Map extends React.Component {
@@ -28,18 +26,42 @@ export default class Map extends React.Component {
     });
   }
 
-  componentDidUpdate() {
+  state = {
+    facilityFilter: constructWhereClaus('facdomain', this.props.filters.facilityDomain),
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const finalWhereClaus = constructWhereClaus('facdomain', this.props.filters.facilityDomain);
+    console.log("final where claus: ", finalWhereClaus);
+    this._renderFacilityLayer(finalWhereClaus)
+
+    // if (prevProps.filters.facilityDomain != this.props.filters.facilityDomain) {
+    //   this.setState({
+    //     facilityFilter: finalWhereClaus
+    //   }, this._renderFacilityLayer);
+    // }
+  }
+
+  _renderFacilityLayer(whereClaus) {
     this.layer = new CartoSQLLayer({
-      data: `SELECT * FROM facdb_v2019_12 WHERE ${constructWhereClaus('facdomain', this.props.filters.facilityDomain)}`,
-      pointRadiusMinPixels: 2,
+      data: `SELECT * FROM facdb_v2019_12 ${whereClaus}`,
+      pointRadiusMinPixels: 10,
       getLineColor: [0, 0, 0, 0.75],
-      getFillColor: [238, 77, 90],
-      lineWidthMinPixels: 1
+      lineWidthMinPixels: 3,
+      getFillColor: colorCategories({
+        attr: 'facdomain',
+        domain: [
+          'LIBRARIES AND CULTURAL PROGRAMS',
+          'PARKS, GARDENS, AND HISTORICAL SITES',
+          'HEALTH AND HUMAN SERVICES',
+        ],
+        colors: 'Bold'
+      })
     })
   }
 
   layer = new CartoSQLLayer({
-    data: `SELECT * FROM facdb_v2019_12 WHERE ${constructWhereClaus('facdomain', this.props.filters.facilityDomain)}`,
+    data: `SELECT * FROM facdb_v2019_12 ${this.state.facilityFilter}`,
     pointRadiusMinPixels: 2,
     getLineColor: [0, 0, 0, 0.75],
     getFillColor: [238, 77, 90],
