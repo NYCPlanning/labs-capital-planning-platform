@@ -5,6 +5,19 @@ import Map from './Map';
 import NavBar from './NavBar';
 
 class App extends React.Component {
+  state = {
+    filters: {
+      facilityDomain: ['HEALTH AND HUMAN SERVICES'],
+    },
+  }
+
+  onFilterSelection = ({ detail }) => {
+    this.setState({ filters: {
+        facilityDomain:  detail,
+      }
+    });
+  }
+
   render() {
     return (
       <div className="as-app">
@@ -12,11 +25,15 @@ class App extends React.Component {
 
         <div className="as-content">
           <aside className="as-sidebar as-sidebar--left">
-            <LayersList />
+            <LayersList
+              onFilterSelection={this.onFilterSelection}
+            />
           </aside>
 
           <main className="as-main">
-            <Map />
+            <Map
+              filters={this.state.filters}
+            />
           </main>
         </div>
       </div>
