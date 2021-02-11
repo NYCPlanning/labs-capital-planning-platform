@@ -26,47 +26,40 @@ export default class Map extends React.Component {
     });
   }
 
-  state = {
-    facilityFilter: constructWhereClaus('facdomain', this.props.filters.facilityDomain),
+  componentDidUpdate() {
+    this._regenerateLayers();
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const finalWhereClaus = constructWhereClaus('facdomain', this.props.filters.facilityDomain);
-    console.log("final where claus: ", finalWhereClaus);
-    this._renderFacilityLayer(finalWhereClaus)
+  _regenerateLayers() {
+    this.layers = this.props.filters.facilityDomain.map(value => {
 
-    // if (prevProps.filters.facilityDomain != this.props.filters.facilityDomain) {
-    //   this.setState({
-    //     facilityFilter: finalWhereClaus
-    //   }, this._renderFacilityLayer);
-    // }
+      return new CartoSQLLayer({
+        id: value,
+        data: `SELECT * FROM facdb_v2019_12 WHERE facdomain='${value}'`,
+        pointRadiusMinPixels: 10,
+        getLineColor: [0, 0, 0, 0.75],
+        lineWidthMinPixels: 3,
+        getFillColor: colorCategories({
+          attr: 'facdomain',
+          domain: [
+            'LIBRARIES AND CULTURAL PROGRAMS',
+            'PARKS, GARDENS, AND HISTORICAL SITES',
+            'HEALTH AND HUMAN SERVICES',
+          ],
+          colors: 'Bold'
+        })
+      });
+    });
   }
 
-  _renderFacilityLayer(whereClaus) {
-    this.layer = new CartoSQLLayer({
-      data: `SELECT * FROM facdb_v2019_12 ${whereClaus}`,
-      pointRadiusMinPixels: 10,
-      getLineColor: [0, 0, 0, 0.75],
-      lineWidthMinPixels: 3,
-      getFillColor: colorCategories({
-        attr: 'facdomain',
-        domain: [
-          'LIBRARIES AND CULTURAL PROGRAMS',
-          'PARKS, GARDENS, AND HISTORICAL SITES',
-          'HEALTH AND HUMAN SERVICES',
-        ],
-        colors: 'Bold'
-      })
-    })
-  }
-
-  layer = new CartoSQLLayer({
-    data: `SELECT * FROM facdb_v2019_12 ${this.state.facilityFilter}`,
+  layers = [
+    new  CartoSQLLayer({
+    data: `SELECT * FROM facdb_v2019_12`,
     pointRadiusMinPixels: 2,
     getLineColor: [0, 0, 0, 0.75],
     getFillColor: [238, 77, 90],
     lineWidthMinPixels: 1
-  })
+  })];
 
   render() {
     return (
@@ -74,7 +67,7 @@ export default class Map extends React.Component {
         <DeckGL
           initialViewState={INITIAL_VIEW_STATE}
           controller={true}
-          layers={[this.layer]}
+          layers={this.layers}
         >
           <StaticMap
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
