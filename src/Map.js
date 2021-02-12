@@ -26,8 +26,31 @@ export default class Map extends React.Component {
     });
   }
 
+  _generateNewLayer(domainData) {
+    return new CartoSQLLayer({
+      data: `SELECT * FROM facdb_v2019_12`,
+      pointRadiusMinPixels: 7,
+      getLineColor: [0, 0, 0, 0.75],
+      lineWidthMinPixels: 3,
+      getFillColor: colorCategories({
+        attr: 'facdomain',
+        domain: domainData,
+        colors: 'Bold',
+      }),
+    });
+  }
+
+  state = {
+    layers: [
+      this._generateNewLayer(this.props.categoryData.facilityDomain.map(value => value.name)),
+    ],
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.filters.facilityDomain !== this.props.filters.facilityDomain) {
+    if (
+      (prevProps.filters.facilityDomain !== this.props.filters.facilityDomain)
+      || (prevProps.categoryData.facilityDomain !== this.props.categoryData.facilityDomain)
+    ) {
       const layer = new CartoSQLLayer({
         id: '12345',
         data: `SELECT * FROM facdb_v2019_12 ${constructWhereClaus('facdomain', this.props.filters.facilityDomain)}`,
@@ -36,11 +59,7 @@ export default class Map extends React.Component {
         lineWidthMinPixels: 3,
         getFillColor: colorCategories({
           attr: 'facdomain',
-          domain: [
-            'LIBRARIES AND CULTURAL PROGRAMS',
-            'PARKS, GARDENS, AND HISTORICAL SITES',
-            'HEALTH AND HUMAN SERVICES',
-          ],
+          domain: this.props.categoryData.facilityDomain.map(value => value.name),
           colors: 'Bold',
         }),
       });
@@ -51,25 +70,6 @@ export default class Map extends React.Component {
     }
   }
 
-  state = {
-    layers: [
-      new  CartoSQLLayer({
-        data: `SELECT * FROM facdb_v2019_12`,
-        pointRadiusMinPixels: 7,
-        getLineColor: [0, 0, 0, 0.75],
-        lineWidthMinPixels: 3,
-        getFillColor: colorCategories({
-          attr: 'facdomain',
-          domain: [
-            'LIBRARIES AND CULTURAL PROGRAMS',
-            'PARKS, GARDENS, AND HISTORICAL SITES',
-            'HEALTH AND HUMAN SERVICES',
-          ],
-          colors: 'Bold',
-        }),
-      }),
-    ],
-  }
 
   render() {
     return (

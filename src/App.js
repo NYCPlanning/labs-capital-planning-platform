@@ -50,6 +50,7 @@ class App extends React.Component {
           <main className="as-main">
             <Map
               filters={this.state.filters}
+              categoryData={this.state.categoryData}
             />
           </main>
         </div>
