@@ -1,5 +1,5 @@
 import React from 'react';
-import CategoryWidget from './widgets/category';
+import CategoryWidget from './widgets/Category';
 
 export default class LayersList extends React.Component {
   render() {
