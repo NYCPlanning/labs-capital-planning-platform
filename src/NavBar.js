@@ -1,20 +1,25 @@
 import React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
-export default class NavBar extends React.Component {
-  render() {
-    return (
-      <as-toolbar>
-        <div href="#" className="as-toolbar__item">
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+}));
+
+export default function NavBar() {
+  const classes = useStyles();
+
+  return (
+    <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar>
+        <Typography variant="h6" noWrap>
           Capital Planning Platform
-        </div>
-        <nav className="as-toolbar__actions">
-          <ul>
-            <li>
-              <a href="#" className="as-toolbar__item">About the Data</a>
-            </li>
-          </ul>
-        </nav>
-      </as-toolbar>
-    );
-  }
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  );
 }

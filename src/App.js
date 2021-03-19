@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
+import Toolbar from '@material-ui/core/Toolbar';
 import NestedLayersList from './widgets/NestedLayersList';
 import Map from './Map';
 import NavBar from './NavBar';
@@ -132,6 +133,8 @@ class App extends React.Component {
             open={true}
             variant="persistent"
           >
+            <Toolbar />
+
             <NestedLayersList
               nestedLayers={this.state.nestedFacilityLayers}
             />
@@ -149,6 +152,8 @@ class App extends React.Component {
               open={true}
               variant="persistent"
             >
+            <Toolbar />
+
             <DetailWidget
               uid="9a6c9e9a071985bc5d654644b1c175f5"
             />
