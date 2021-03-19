@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
+import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
-import LayersList from './LayersList';
 import NestedLayersList from './widgets/NestedLayersList';
 import Map from './Map';
 import NavBar from './NavBar';
@@ -123,26 +123,27 @@ class App extends React.Component {
   // TODO: Move to Material UI Grid
   render() {
     return (
-      <div className="as-app">
+      <Grid>
         <NavBar />
 
-        <div className="as-content">
-          <aside className="as-sidebar as-sidebar--left">
+        <Grid item>
+          <Drawer
+            anchor="left"
+            open={true}
+            variant="persistent"
+          >
             <NestedLayersList
               nestedLayers={this.state.nestedFacilityLayers}
             />
+          </Drawer>
 
-            <LayersList
-              categoryData={this.state.categoryData}
-              onFilterSelection={this.onFilterSelection}
-            />
-          </aside>
-          <main className="as-main">
-            {/* <Map
+          <main className="">
+            <Map
               filters={this.state.filters}
               categoryData={this.state.categoryData}
-            /> */}
+            />
           </main>
+
           <Drawer
               anchor="right"
               open={true}
@@ -152,8 +153,8 @@ class App extends React.Component {
               uid="9a6c9e9a071985bc5d654644b1c175f5"
             />
           </Drawer>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     );
   }
 }

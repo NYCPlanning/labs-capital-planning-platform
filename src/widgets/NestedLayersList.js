@@ -89,6 +89,7 @@ export default function NestedLayersList(props) {
       style={
         {
           marginTop: "15px",
+          maxWidth: "350px",
         }
       } 
       elevation={0}
