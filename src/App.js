@@ -1,9 +1,11 @@
 import React from 'react';
 import './App.css';
+import Drawer from '@material-ui/core/Drawer';
 import LayersList from './LayersList';
 import NestedLayersList from './widgets/NestedLayersList';
 import Map from './Map';
 import NavBar from './NavBar';
+import DetailWidget from './widgets/Detail';
 
 class ListItem {
   constructor(id, type, checked, label, children) {
@@ -118,6 +120,7 @@ class App extends React.Component {
     });
   }
 
+  // TODO: Move to Material UI Grid
   render() {
     return (
       <div className="as-app">
@@ -134,13 +137,21 @@ class App extends React.Component {
               onFilterSelection={this.onFilterSelection}
             />
           </aside>
-
           <main className="as-main">
             {/* <Map
               filters={this.state.filters}
               categoryData={this.state.categoryData}
             /> */}
           </main>
+          <Drawer
+              anchor="right"
+              open={true}
+              variant="persistent"
+            >
+            <DetailWidget
+              uid="9a6c9e9a071985bc5d654644b1c175f5"
+            />
+          </Drawer>
         </div>
       </div>
     );
