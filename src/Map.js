@@ -2,6 +2,9 @@ import React from 'react';
 import DeckGL from '@deck.gl/react';
 import {StaticMap} from 'react-map-gl';
 import {CartoSQLLayer, setDefaultCredentials, colorCategories} from '@deck.gl/carto';
+import {
+  useHistory,
+} from "react-router-dom";
 
 const INITIAL_VIEW_STATE = {
   longitude: -73.986607,
@@ -18,12 +21,29 @@ function constructWhereClaus(property, facdomainValues) {
   return (facdomainValues.length > 0) ? `WHERE (${finalClaus})` : '';
 }
 
-export default class Map extends React.Component {
+// Higher-order component to accomodate useHistory react-router hook
+function wrappedMap(mapComponent) {
+  return function WrappedComponent(props) {
+    let history = useHistory();
+
+    return (<Map
+      {...props}
+      history={history}
+    />);
+  }
+}
+
+class Map extends React.Component {
   componentDidMount() {
     setDefaultCredentials({
       username: process.env.REACT_APP_CARTO_USERNAME,
       apiKey: process.env.REACT_APP_CARTO_API_KEY,
     });
+  }
+
+
+  _onPointClick = (info,  event) => {
+    this.props.history.push("/details/" + info.object.properties.uid)
   }
 
   _generateNewLayer(domainData) {
@@ -37,6 +57,8 @@ export default class Map extends React.Component {
         domain: domainData,
         colors: 'Bold',
       }),
+      onClick: this._onPointClick,
+      pickable: true,
     });
   }
 
@@ -62,6 +84,8 @@ export default class Map extends React.Component {
           domain: this.props.categoryData.facilityDomain.map(value => value.name),
           colors: 'Bold',
         }),
+        onClick: this._onPointClick, // TODO: prevent multiple onClick registrations
+        pickable: true,
       });
   
       this.setState({
@@ -87,3 +111,5 @@ export default class Map extends React.Component {
     );
   }
 }
+
+export default wrappedMap(Map);

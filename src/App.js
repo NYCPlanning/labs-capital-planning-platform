@@ -8,7 +8,6 @@ import Map from './Map';
 import NavBar from './NavBar';
 import DetailWidget from './widgets/Detail';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
@@ -152,23 +151,21 @@ class App extends React.Component {
             />
           </main>
 
-          <Router>
-            <Switch>
-              <Route exact path="/">
-              </Route>
-              <Route path="/details/:recordId">
-                <Drawer
-                  anchor="right"
-                  open={true}
-                  variant="persistent"
-                >
-                  <Toolbar />
+          <Switch>
+            <Route exact path="/">
+            </Route>
+            <Route path="/details/:recordId">
+              <Drawer
+                anchor="right"
+                open={true}
+                variant="persistent"
+              >
+                <Toolbar />
 
-                  <DetailWidget />
-                </Drawer>
-              </Route>
-            </Switch>
-          </Router>
+                <DetailWidget />
+              </Drawer>
+            </Route>
+          </Switch>
         </Grid>
       </Grid>
     );
