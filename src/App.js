@@ -7,6 +7,11 @@ import NestedLayersList from './widgets/NestedLayersList';
 import Map from './Map';
 import NavBar from './NavBar';
 import DetailWidget from './widgets/Detail';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
 class ListItem {
   constructor(id, type, checked, label, children) {
@@ -147,17 +152,23 @@ class App extends React.Component {
             />
           </main>
 
-          <Drawer
-              anchor="right"
-              open={true}
-              variant="persistent"
-            >
-            <Toolbar />
+          <Router>
+            <Switch>
+              <Route exact path="/">
+              </Route>
+              <Route path="/details/:recordId">
+                <Drawer
+                  anchor="right"
+                  open={true}
+                  variant="persistent"
+                >
+                  <Toolbar />
 
-            <DetailWidget
-              uid="9a6c9e9a071985bc5d654644b1c175f5"
-            />
-          </Drawer>
+                  <DetailWidget />
+                </Drawer>
+              </Route>
+            </Switch>
+          </Router>
         </Grid>
       </Grid>
     );
