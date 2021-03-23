@@ -33,7 +33,7 @@ export default function DetailWidget() {
 
   useEffect(() => {
     fetchRecordDetails();
-  });
+  }, [recordId]);
 
   return (
     recordDetails ?
