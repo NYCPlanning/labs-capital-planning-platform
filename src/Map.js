@@ -84,7 +84,7 @@ class Map extends React.Component {
           domain: this.props.categoryData.facilityDomain.map(value => value.name),
           colors: 'Bold',
         }),
-        onClick: this._onPointClick, // TODO: prevent multiple onClick registrations
+        onClick: this._onPointClick,
         pickable: true,
       });
   
