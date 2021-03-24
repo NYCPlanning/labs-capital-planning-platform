@@ -125,7 +125,6 @@ class App extends React.Component {
     });
   }
 
-  // TODO: Move to Material UI Grid
   render() {
     return (
       <Grid>
