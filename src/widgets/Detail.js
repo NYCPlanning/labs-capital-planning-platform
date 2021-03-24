@@ -4,6 +4,7 @@ import {
 } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -39,10 +40,21 @@ export default function DetailWidget() {
   return (
     recordDetails ?
       <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
+        <Table stickyHeader className={classes.table} aria-label="Facility details table">
+          <TableHead>
+            <TableRow>
+                <TableCell
+                  key={0}
+                  align={'left'}
+                  colSpan={2}
+                >
+                  {recordDetails['facname']}
+                </TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody>
             {Object.keys(recordDetails).map((key) => (
-              ["the_geom", "the_geom_webmercator", "cartodb_id"].includes(key) ? <></> :
+              ["facname", "the_geom", "the_geom_webmercator", "cartodb_id"].includes(key) ? <></> :
               <>
                 <TableRow key={recordDetails[key]}>
                   <TableCell component="th" scope="row">
