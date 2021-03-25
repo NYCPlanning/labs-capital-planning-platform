@@ -41,7 +41,7 @@ function LayersListItem(props)  {
   const labelId = `checkbox-list-secondary-label-${item.label}`;
   let childList;
 
-  if (item.children) {
+  if (item.children.length > 0) {
     childList = (
       <Collapse in={open} timeout="auto" unmountOnExit>
         <LayersList 
