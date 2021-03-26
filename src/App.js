@@ -147,12 +147,25 @@ class App extends React.Component {
     });
   }
 
+  toggledChildren = (children, checkedValue) => {
+    return children.map(child => {
+      return {
+        ...child,
+        checked: checkedValue,
+        children: this.toggledChildren(child.children, checkedValue),
+      }
+    })
+  }
+
   onListItemToggle = (item) => {
     const newNestedFacilityLayers = this.state.nestedFacilityLayers.map((domain) => {
       if (domain.id === item.id) {
+        const newCheckedValue = (domain.checked === "checked") ? "unchecked" : "checked";
+
         return {
           ...domain,
-          checked: (domain.checked === "checked") ? "unchecked" : "checked",
+          checked: newCheckedValue,
+          children: this.toggledChildren(domain.children, newCheckedValue),
         }
       }
 
@@ -160,9 +173,12 @@ class App extends React.Component {
         ...domain,
         children: domain.children.map((group) => {
           if (group.id === item.id) {
+            const newCheckedValue = (group.checked === "checked") ? "unchecked" : "checked";
+
             return {
               ...group,
-              checked: (group.checked === "checked") ? "unchecked" : "checked",
+              checked: newCheckedValue,
+              children: this.toggledChildren(group.children, newCheckedValue),
             }
           }
    
