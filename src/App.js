@@ -13,34 +13,54 @@ import {
 } from "react-router-dom";
 
 class ListItem {
-  constructor(id, type, checked, label, children) {
-    this.id = id;
+  constructor(type, domain, group, subgroup, checked, children) {
     this.type = type;
+    this.domain = domain;
+    this.group = group;
+    this.subgroup = subgroup;
     this.checked = checked;
-    this.label = label;
     this.children = children;
+
+    if (type === "domain") {
+      this.label = domain;
+    }
+    if (type === "group") {
+      this.label = group;
+    }
+    if (type === "subgroup") {
+      this.label = subgroup;
+    }
+
+    this.id = this.label + '-' + type;
   }
 
   id;
 
-  // facdomain, facgroup, facsubgrp
+  // domain, group, subgroup
   type;
+
+  domain;
+
+  group;
+
+  subgroup;
+
+  label;
 
   // checked, indeterminate, unchecked
   checked = "checked";
-
-  label;
 
   children = [];
 }
 
 function _insertFacdomain(list, combination) {
-  if (!(list.find(listItem => listItem.id === combination.facdomain))) {
+  if (!(list.find(listItem => listItem.id === combination.facdomain + '-domain'))) {
     list.push(new ListItem(
+      "domain",
       combination.facdomain,
-      "facdomain",
-      true,
-      combination.facdomain,
+      combination.facgroup,
+      combination.facsubgrp,
+      "checked",
       []
     ));
   }
@@ -48,14 +68,15 @@ function _insertFacdomain(list, combination) {
 
 // only call this function after _insertFacdomain
 function _insertFacgroup(list, combination) {
-  const facdomainItem = list.find(listItem => listItem.id === combination.facdomain);
+  const facdomainItem = list.find(listItem => listItem.id === combination.facdomain  + '-domain');
 
-  if (!(facdomainItem.children.find(listItem => listItem.id === combination.facgroup))) {
+  if (!(facdomainItem.children.find(listItem => listItem.id === combination.facgroup  + '-group'))) {
     facdomainItem.children.push(new ListItem(
+      "group",
+      combination.domain,
       combination.facgroup,
-      "facgroup",
-      true,
-      combination.facgroup,
+      combination.facsubgrp,
+      "checked",
       []
     ));
   }
@@ -63,21 +84,22 @@ function _insertFacgroup(list, combination) {
 
 // only call this function after _insertFacgroup
 function _insertFacsubgrp(list, combination) {
-  const facdomainItem = list.find(listItem => listItem.id === combination.facdomain);
-  const facgroupItem = facdomainItem.children.find(listItem => listItem.id === combination.facgroup);
+  const facdomainItem = list.find(listItem => listItem.id === combination.facdomain + '-domain');
+  const facgroupItem = facdomainItem.children.find(listItem => listItem.id === combination.facgroup + '-group');
 
-  if (!(facgroupItem.children.find(listItem => listItem.id === combination.facsubgrp))) {
+  if (!(facgroupItem.children.find(listItem => listItem.id === combination.facsubgrp + '-group'))) {
     facgroupItem.children.push(new ListItem(
+      "subgroup",
+      combination.domain,
+      combination.facgroup,
       combination.facsubgrp,
-      "facsubgrp",
-      true,
-      combination.facsubgrp,
+      "checked",
       []
     ));
   }
 };
 
-function _constructLayersList(combinations) {
+function _constructLayersList(combinations, condition) {
   let list = [];
 
   combinations.map((combination) => {
@@ -125,6 +147,47 @@ class App extends React.Component {
     });
   }
 
+  onListItemToggle = (item) => {
+    const newNestedFacilityLayers = this.state.nestedFacilityLayers.map((domain) => {
+      if (domain.id === item.id) {
+        return {
+          ...domain,
+          checked: (domain.checked === "checked") ? "unchecked" : "checked",
+        }
+      }
+
+      return {
+        ...domain,
+        children: domain.children.map((group) => {
+          if (group.id === item.id) {
+            return {
+              ...group,
+              checked: (group.checked === "checked") ? "unchecked" : "checked",
+            }
+          }
+   
+          return {
+            ...group,
+            children: group.children = group.children.map((subgroup) => {
+              if (subgroup.id === item.id) {
+                return {
+                  ...subgroup,
+                  checked: (subgroup.checked === "checked") ? "unchecked" : "checked",
+                }
+              };
+  
+              return subgroup;
+            }),
+          }
+        }),
+      }
+    });
+
+    this.setState({
+      nestedFacilityLayers: newNestedFacilityLayers,
+    })
+  }
+
   render() {
     return (
       <Grid>
@@ -140,6 +203,7 @@ class App extends React.Component {
 
             <NestedLayersList
               nestedLayers={this.state.nestedFacilityLayers}
+              onListItemToggle={this.onListItemToggle}
             />
           </Drawer>
 

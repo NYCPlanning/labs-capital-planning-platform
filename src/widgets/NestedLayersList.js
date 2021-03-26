@@ -28,6 +28,7 @@ function LayersList(props)  {
           return (
             <LayersListItem
               item={item}
+              onListItemToggle={props.onListItemToggle}
             />
           );
         })}
@@ -46,6 +47,7 @@ function LayersListItem(props)  {
       <Collapse in={open} timeout="auto" unmountOnExit>
         <LayersList 
           list={item.children}
+          onListItemToggle={props.onListItemToggle}
         />
       </Collapse>
     );
@@ -68,6 +70,8 @@ function LayersListItem(props)  {
           <Checkbox
             edge="end"
             inputProps={{ 'aria-labelledby': labelId }}
+            checked={item.checked === "checked"}
+            onChange={() => props.onListItemToggle(item)}
           />
         </ListItemSecondaryAction>
       </ListItem>
@@ -97,6 +101,7 @@ export default function NestedLayersList(props) {
       <LayersList
         title="Facility Categories"
         list={nestedLayers}
+        onListItemToggle={props.onListItemToggle}
       />
     </Paper>
   );
