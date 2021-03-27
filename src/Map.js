@@ -63,27 +63,19 @@ class Map extends React.Component {
   }
 
   state = {
-    layers: [
-      this._generateNewLayer(this.props.categoryData.facilityDomain.map(value => value.name)),
-    ],
+    layers: [],
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
-      (prevProps.filters.facilityDomain !== this.props.filters.facilityDomain)
-      || (prevProps.categoryData.facilityDomain !== this.props.categoryData.facilityDomain)
+      prevProps.placeholder !== this.props.placeholder
     ) {
       const layer = new CartoSQLLayer({
         id: '12345',
-        data: `SELECT * FROM facdb_v2019_12 ${constructWhereClaus('facdomain', this.props.filters.facilityDomain)}`,
+        data: `SELECT * FROM facdb_v2019_12 ${constructWhereClaus('facdomain', [])}`,
         pointRadiusMinPixels: 7,
         getLineColor: [0, 0, 0, 0.75],
         lineWidthMinPixels: 3,
-        getFillColor: colorCategories({
-          attr: 'facdomain',
-          domain: this.props.categoryData.facilityDomain.map(value => value.name),
-          colors: 'Bold',
-        }),
         onClick: this._onPointClick,
         pickable: true,
       });

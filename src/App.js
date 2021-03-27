@@ -112,14 +112,7 @@ function _constructLayersList(combinations, condition) {
 }
 
 class App extends React.Component {
-  state = {
-    categoryData: {
-      facilityDomain: [],
-    },
-    filters: {
-      facilityDomain: [],
-    },
-  }
+  state = {}
 
   async componentDidMount() {
     const facilityGroupCombinationsPromise = await fetch('https://planninglabs.carto.com/api/v2/sql?q=SELECT facdomain, facgroup, facsubgrp FROM planninglabs.facdb_v2019_12 GROUP BY facdomain, facgroup, facsubgrp');
@@ -129,15 +122,6 @@ class App extends React.Component {
 
     this.setState({
       nestedFacilityLayers: nestedFacilityLayers,
-    });
-  }
-
-  onFilterSelection = (event) => {
-    let { detail } = event;
-
-    this.setState({ filters: {
-        facilityDomain: detail,
-      }
     });
   }
 
@@ -218,10 +202,7 @@ class App extends React.Component {
           </Drawer>
 
           <main className="">
-            <Map
-              filters={this.state.filters}
-              categoryData={this.state.categoryData}
-            />
+            <Map />
           </main>
 
           <Switch>
