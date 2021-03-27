@@ -14,13 +14,6 @@ const INITIAL_VIEW_STATE = {
   bearing: 0
 };
 
-function constructWhereClaus(property, facdomainValues) {
-  const facdomainConditions = facdomainValues.map(value => `${property}='${value}'`);
-  const finalClaus = facdomainConditions.join(') OR (');
-
-  return (facdomainValues.length > 0) ? `WHERE (${finalClaus})` : '';
-}
-
 // Higher-order component to accomodate useHistory react-router hook
 function wrappedMap(mapComponent) {
   return function WrappedComponent(props) {
@@ -61,7 +54,11 @@ class Map extends React.Component {
           pointRadiusMinPixels: 7,
           getLineColor: [0, 0, 0, 0.75],
           lineWidthMinPixels: 3,
-          getFillColor: [238, 77, 90],
+          getFillColor: colorCategories({
+            attr: 'facdomain',
+            domain: this.props.domains,
+            colors: 'Bold',
+          }),
           onClick: this._onPointClick,
           pickable: true,
         });

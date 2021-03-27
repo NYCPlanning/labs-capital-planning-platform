@@ -196,6 +196,12 @@ class App extends React.Component {
     }, []);
   }
 
+  getDomains = () => {
+    if (!this.state.nestedFacilityLayers) return [];
+
+    return this.state.nestedFacilityLayers.map(domain => domain.domain);
+  }
+
   render() {
     return (
       <Grid>
@@ -218,6 +224,7 @@ class App extends React.Component {
           <main className="">
             <Map
               layers={this.getCheckedSubgroups()}
+              domains={this.getDomains()}
             />
           </main>
 
