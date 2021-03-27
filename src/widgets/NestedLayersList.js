@@ -9,20 +9,35 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  groupList: {
+    paddingLeft: 15,
+  },
+  subgroupList: {
+    paddingLeft: 25,
+  },
+});
 
 function LayersList(props)  {
   const { list, title } = props;
 
-  let listTitle = title ?  (
+  const classes = useStyles();
+
+  const listTitle = title ?  (
     <ListSubheader component="div" id="nested-list-subheader">
       {title}
     </ListSubheader>
   ) : (null);
+
+  const listType = list[0].type;
   
   return (
     <List
       dense
       subheader={listTitle}
+      className={classes[listType + 'List']}
     >
         {list.map((item) => {
           return (
