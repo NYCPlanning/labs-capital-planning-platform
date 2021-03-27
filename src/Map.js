@@ -46,22 +46,6 @@ class Map extends React.Component {
     this.props.history.push("/details/" + info.object.properties.uid)
   }
 
-  _generateNewLayer(domainData) {
-    return new CartoSQLLayer({
-      data: `SELECT * FROM facdb_v2019_12`,
-      pointRadiusMinPixels: 7,
-      getLineColor: [0, 0, 0, 0.75],
-      lineWidthMinPixels: 3,
-      getFillColor: colorCategories({
-        attr: 'facdomain',
-        domain: domainData,
-        colors: 'Bold',
-      }),
-      onClick: this._onPointClick,
-      pickable: true,
-    });
-  }
-
   state = {
     layers: [],
   }
