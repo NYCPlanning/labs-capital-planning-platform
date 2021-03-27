@@ -52,20 +52,23 @@ class Map extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
-      prevProps.placeholder !== this.props.placeholder
+      prevProps.layers !== this.props.layers
     ) {
-      const layer = new CartoSQLLayer({
-        id: '12345',
-        data: `SELECT * FROM facdb_v2019_12 ${constructWhereClaus('facdomain', [])}`,
-        pointRadiusMinPixels: 7,
-        getLineColor: [0, 0, 0, 0.75],
-        lineWidthMinPixels: 3,
-        onClick: this._onPointClick,
-        pickable: true,
-      });
-  
+      const newLayers = this.props.layers.map((layer) => {
+        return new CartoSQLLayer({
+          id: layer,
+          data: `SELECT * FROM facdb_v2019_12 WHERE facsubgrp = '${layer}'`,
+          pointRadiusMinPixels: 7,
+          getLineColor: [0, 0, 0, 0.75],
+          lineWidthMinPixels: 3,
+          getFillColor: [238, 77, 90],
+          onClick: this._onPointClick,
+          pickable: true,
+        });
+      })
+
       this.setState({
-        layers: [layer],
+        layers: newLayers,
       });
     }
   }

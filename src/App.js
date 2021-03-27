@@ -48,7 +48,7 @@ class ListItem {
   label;
 
   // checked, indeterminate, unchecked
-  checked = "checked";
+  checked = "unchecked";
 
   children = [];
 }
@@ -60,7 +60,7 @@ function _insertFacdomain(list, combination) {
       combination.facdomain,
       combination.facgroup,
       combination.facsubgrp,
-      "checked",
+      "unchecked",
       []
     ));
   }
@@ -76,7 +76,7 @@ function _insertFacgroup(list, combination) {
       combination.domain,
       combination.facgroup,
       combination.facsubgrp,
-      "checked",
+      "unchecked",
       []
     ));
   }
@@ -93,7 +93,7 @@ function _insertFacsubgrp(list, combination) {
       combination.domain,
       combination.facgroup,
       combination.facsubgrp,
-      "checked",
+      "unchecked",
       []
     ));
   }
@@ -182,6 +182,20 @@ class App extends React.Component {
     })
   }
 
+  getCheckedSubgroups = () => {
+    if (!this.state.nestedFacilityLayers) return [];
+
+    return this.state.nestedFacilityLayers.reduce((domainAcc, curDomain) => {
+      return domainAcc.concat(curDomain.children.reduce((groupAcc, curGroup) => {
+        return groupAcc.concat(curGroup.children.reduce((subgroupAcc, curSubgroup) => {
+          if (curSubgroup.checked === "checked") return subgroupAcc.concat(curSubgroup.subgroup);
+
+          return subgroupAcc;
+        }, []));
+      }, []));
+    }, []);
+  }
+
   render() {
     return (
       <Grid>
@@ -202,7 +216,9 @@ class App extends React.Component {
           </Drawer>
 
           <main className="">
-            <Map />
+            <Map
+              layers={this.getCheckedSubgroups()}
+            />
           </main>
 
           <Switch>
