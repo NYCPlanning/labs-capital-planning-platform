@@ -73,7 +73,7 @@ class Map extends React.Component {
 
   render() {
     return (
-      <div className="as-map-area mapContainer">
+      <div className="mapContainer">
         <DeckGL
           initialViewState={INITIAL_VIEW_STATE}
           controller={true}
