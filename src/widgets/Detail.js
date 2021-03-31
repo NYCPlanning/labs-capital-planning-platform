@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   useParams
 } from "react-router-dom";
@@ -25,17 +25,17 @@ export default function DetailWidget() {
 
   const [recordDetails, setRecordDetails] = useState([]);
 
-  const fetchRecordDetails = async () => {
+  const fetchRecordDetails = useCallback(async () => {
     const recordDetailsPromise = await fetch("https://planninglabs.carto.com:443/api/v2/sql?q=select * from facdb_v2019_12 WHERE uid='" + recordId + "'");
 
     const { rows: [ recordDetails ] } = await recordDetailsPromise.json();
 
     setRecordDetails(recordDetails);
-  }
+  }, [recordId, setRecordDetails]);
 
   useEffect(() => {
     fetchRecordDetails();
-  }, [recordId]);
+  }, [fetchRecordDetails]);
 
   return (
     recordDetails ?

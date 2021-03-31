@@ -102,11 +102,11 @@ function _insertFacsubgrp(list, combination) {
 function _constructLayersList(combinations, condition) {
   let list = [];
 
-  combinations.map((combination) => {
+  combinations.forEach((combination) => {
     _insertFacdomain(list, combination);
     _insertFacgroup(list, combination);
     _insertFacsubgrp(list, combination);
-  })
+  });
 
   return list;
 }
