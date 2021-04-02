@@ -223,7 +223,7 @@ class App extends React.Component {
 
           <main className="">
             <Map
-              layers={this.getCheckedSubgroups()}
+              selectedFacSubgroups={this.getCheckedSubgroups()}
               domains={this.getDomains()}
             />
           </main>

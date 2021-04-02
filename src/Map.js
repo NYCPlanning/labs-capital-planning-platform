@@ -41,21 +41,36 @@ class Map extends React.Component {
 
 
   _onPointClick = (info,  event) => {
-    this.props.history.push("/details/" + info.object.properties.uid)
+    const {
+      object: {
+        properties: {
+          uid,
+        }
+      }
+    } = info;
+
+    this.props.history.push("/details/" + uid);
+
+    this.setState({
+      ...this.state,
+      selectedFeatureId: uid,
+    });
   }
 
   state = {
     layers: [],
+    selectedFeatureId: null,
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
-      prevProps.layers !== this.props.layers
+      prevProps.selectedFacSubgroups !== this.props.selectedFacSubgroups ||
+      prevState.selectedFeatureId !== this.state.selectedFeatureId
     ) {
-      const newLayers = this.props.layers.map((layer) => {
+      const newFacilityLayers = this.props.selectedFacSubgroups.map((subgroup) => {
         return new CartoSQLLayer({
-          id: layer,
-          data: `SELECT * FROM facdb_v2019_12 WHERE facsubgrp = '${layer}'`,
+          id: subgroup,
+          data: `SELECT * FROM facdb_v2019_12 WHERE facsubgrp = '${subgroup}'`,
           pointRadiusMinPixels: 7,
           getLineColor: [0, 0, 0, 0.75],
           lineWidthMinPixels: 3,
@@ -67,10 +82,25 @@ class Map extends React.Component {
           onClick: this._onPointClick,
           pickable: true,
         });
-      })
+      });
+
+      const { selectedFeatureId } = this.state;
+
+      let selectionLayer = null;
+
+      if (selectedFeatureId) {
+        selectionLayer = new CartoSQLLayer({
+          id: selectedFeatureId,
+          data: `SELECT the_geom_webmercator FROM facdb_v2019_12 WHERE uid = '${selectedFeatureId}'`,
+          pointRadiusMinPixels: 9,
+          getLineColor: [255,153,153,255],
+          getFillColor: [0, 0, 0, 0],
+          lineWidthMinPixels: 3,
+        });
+      }
 
       this.setState({
-        layers: newLayers,
+        layers: [...newFacilityLayers, selectionLayer],
       });
     }
   }
